@@ -1,0 +1,71 @@
+name: VPN.ht Sample Integrations
+
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: yarn version
+        run: |
+          yarn version
+
+      - name: node version
+        run: |
+          node --version
+
+      - name: Build
+        run: |
+          ./scripts/build.sh
+
+      - name: Upload artifacts [electron-win64]
+        uses: actions/upload-artifact@master
+        with:
+          name: electron-win64
+          path: build/electron/win64
+
+      - name: Upload artifacts [electron-osx64]
+        uses: actions/upload-artifact@master
+        with:
+          name: electron-osx64
+          path: build/electron/osx64
+
+      - name: Upload artifacts [electron-linux64]
+        uses: actions/upload-artifact@master
+        with:
+          name: electron-linux64
+          path: build/electron/linux64
+
+      - name: Upload artifacts [nwjs-win64]
+        uses: actions/upload-artifact@master
+        with:
+          name: nwjs-win64
+          path: build/nwjs/win64
+
+      - name: Upload artifacts [nwjs-osx64]
+        uses: actions/upload-artifact@master
+        with:
+          name: nwjs-osx64
+          path: build/nwjs/osx64
+
+      - name: Upload artifacts [nwjs-linux64]
+        uses: actions/upload-artifact@master
+        with:
+          name: nwjs-linux64
+          path: build/nwjs/linux64
